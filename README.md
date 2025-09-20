@@ -27,35 +27,36 @@ in a classroom-friendly way.
 - GitHub account (only for contributing)
 
 ---
-
+```
 ## Quickstart
-This is the **fastest way** to see Astra Mana in action.
+This is the *fastest (not the best) way* to see Astra Mana in action.
 
-### 1. Clone and enter the repo
+# 1. Clone and enter the repo
 git clone https://github.com/jeffkraken/astra-mana.git
 cd astra-mana
 
-### 2. Create and activate a virtual environment
+# 2. Create and activate a virtual environment
 python -m venv .venv
-#### Windows PowerShell:
+
+# Windows PowerShell:
 .\.venv\Scripts\Activate.ps1
-#### macOS/Linux:
+# macOS/Linux:
 source .venv/bin/activate
 
-### 3. Install locally
+# 3. Install locally
 pip install -e .
 
-### 4. Initialize Astra (creates astra.db and wallet)
+# 4. Initialize Astra (creates astra.db and wallet)
 astra-mana init --db astra.db --tph 10 --max-hours 24
 
-### 5. Generate a supporter keypair (Taylor)
+# 5. Generate a supporter keypair (Taylor)
 astra-mana gen-keys --supporter Taylor
-### Copy the pubkey_hex from the output
+# Copy the pubkey_hex from the output
 
-### 6. Register Taylor with Astra
+# 6. Register Taylor with Astra
 astra-mana register --db astra.db --supporter Taylor --pubkey-hex <PASTE_PUBKEY_HEX>
 
-### 7. Create a proof (signed + mined)
+# 7. Create a proof (signed + mined)
 astra-mana create-proof \
   --supporter Taylor \
   --action "Removed invasive species and mulched native saplings" \
@@ -63,8 +64,8 @@ astra-mana create-proof \
   --evidence-uri https://example.org/proofs/taylor-2025-09-19.pdf \
   --out proof.json
 
-### 8. Submit the proof to Astra (verify + mint tokens)
+# 8. Submit the proof to Astra (verify + mint tokens)
 astra-mana submit-proof --db astra.db --proof-json proof.json
 
-### 9. Check Astra’s wallet
+# 9. Check Astra’s wallet
 astra-mana wallet --db astra.db
