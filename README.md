@@ -32,7 +32,7 @@ in a classroom-friendly way.
 This is the **fastest way** to see Astra Mana in action.
 
 ### 1. Clone and enter the repo
-git clone https://github.com/<YOURNAME>/astra-mana.git
+git clone https://github.com/jeffkraken/astra-mana.git
 cd astra-mana
 
 ### 2. Create and activate a virtual environment
