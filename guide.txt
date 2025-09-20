@@ -20,7 +20,7 @@ This guide gets you from a fresh clone to a working demo:
 
 1) Clone and enter the project
 ------------------------------
-git clone <YOUR_REPO_URL> astra-mana
+git clone https://github.com/jeffkraken/astra-mana.git
 cd astra-mana
 
 
