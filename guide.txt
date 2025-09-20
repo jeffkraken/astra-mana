@@ -1,0 +1,156 @@
+Astra Mana – Quickstart Workflow (Local Install + Full Flow)
+============================================================
+
+This guide gets you from a fresh clone to a working demo:
+- Install the package in editable mode
+- Initialize Astra’s ledger
+- Generate a supporter keypair
+- Register the supporter
+- Create a signed + proof-of-work claim
+- Submit the claim and mint tokens
+- Check Astra’s wallet
+
+
+0) Requirements
+---------------
+- Python 3.10+ installed
+- Git installed
+- Terminal (PowerShell on Windows; Terminal on macOS/Linux)
+
+
+1) Clone and enter the project
+------------------------------
+git clone <YOUR_REPO_URL> astra-mana
+cd astra-mana
+
+
+2) Create and activate a virtual environment
+--------------------------------------------
+# Windows (PowerShell):
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+# macOS/Linux (bash/zsh):
+python -m venv .venv
+source .venv/bin/activate
+
+
+3) Install locally (editable)
+-----------------------------
+pip install -e .
+
+# Optional: verify the CLI is on PATH
+astra-mana -h
+
+
+4) Initialize Astra (creates DB and wallet)
+-------------------------------------------
+# This creates astra.db in the current folder and sets tokens-per-hour (TPH)
+astra-mana init --db astra.db --tph 10 --max-hours 24
+
+# You can re-run with different parameters if you want to reset the demo.
+# To fully reset, delete astra.db and run init again.
+
+
+5) Generate a supporter keypair (Taylor)
+----------------------------------------
+# Saves Taylor's private key to: ~/.astra_mana/keys/Taylor.pem
+astra-mana gen-keys --supporter Taylor
+
+# The command prints a JSON object that includes "pubkey_hex".
+# Copy the pubkey_hex value for the next step.
+
+
+6) Register Taylor’s public key with Astra
+------------------------------------------
+# Replace <PASTE_PUBKEY_HEX> with the value from step 5 output
+astra-mana register --db astra.db --supporter Taylor --pubkey-hex <PASTE_PUBKEY_HEX>
+
+
+7) (Optional) Compute SHA-256 of your evidence file
+---------------------------------------------------
+# If you have a PDF/IMG/CSV certificate or transcript to reference, compute its SHA-256.
+
+# Windows (PowerShell):
+#   Get-FileHash .\taylor-2025-09-19.pdf -Algorithm SHA256
+# Copy the "Hash" value.
+
+# macOS/Linux:
+#   shasum -a 256 taylor-2025-09-19.pdf
+# Copy the hex digest (first column).
+
+# If you don't have a file yet, you can skip this and leave --evidence-hash empty.
+
+
+8) Create a signed + PoW claim (Taylor)
+----------------------------------------
+# This signs a payload and performs a small proof-of-work (difficulty scales with hours).
+# The result is written to proof.json.
+
+astra-mana create-proof ^
+  --supporter Taylor ^
+  --action "Removed invasive species and mulched native saplings" ^
+  --hours 3.5 ^
+  --evidence-uri https://example.org/proofs/taylor-2025-09-19.pdf ^
+  --evidence-hash <OPTIONAL_SHA256_HEX> ^
+  --out proof.json
+
+# On macOS/Linux, use backslashes for line continuation:
+# astra-mana create-proof \
+#   --supporter Taylor \
+#   --action "Removed invasive species and mulched native saplings" \
+#   --hours 3.5 \
+#   --evidence-uri https://example.org/proofs/taylor-2025-09-19.pdf \
+#   --evidence-hash <OPTIONAL_SHA256_HEX> \
+#   --out proof.json
+
+# Notes:
+# - If hours are larger, PoW takes longer (capped at an easy classroom difficulty).
+# - You can open proof.json to inspect the fields:
+#   claim_id, supporter, action, hours, timestamp, evidence_uri, evidence_hash, nonce, attestation, pow_hash.
+
+
+9) Submit the claim to Astra (verify + mint)
+--------------------------------------------
+astra-mana submit-proof --db astra.db --proof-json proof.json
+
+# Expected output includes the reward (tokens minted) and wallet state.
+
+
+10) Check Astra’s wallet anytime
+--------------------------------
+astra-mana wallet --db astra.db
+
+
+11) (Optional) See replay protection and tamper checks
+------------------------------------------------------
+# Replay (should fail): submitting the same proof twice is rejected
+astra-mana submit-proof --db astra.db --proof-json proof.json
+
+# Tamper (should fail): change any field in proof.json and submit again
+# e.g., change "hours" from 3.5 to 4.0, then:
+astra-mana submit-proof --db astra.db --proof-json proof.json
+
+
+12) Troubleshooting
+-------------------
+- Command not found: ensure your virtual environment is active and re-run "pip install -e .".
+- On Windows, if script execution is blocked, run PowerShell as Administrator:
+  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+- Reset the demo:
+  - Deactivate venv (type: deactivate)
+  - Delete astra.db and proof.json
+  - Optionally delete ~/.astra_mana/keys/Taylor.pem
+  - Re-run steps 2–10
+- If create-proof runs slowly for large hours:
+  - Reduce --hours or adjust difficulty mapping in src/astra_mana/pow.py (classroom tweak).
+
+
+13) What just happened (quick recap)
+------------------------------------
+- You installed the package ("pip install -e .") so you can edit the code and re-run instantly.
+- You initialized an SQLite ledger (astra.db) and a wallet for Astra.
+- You generated Taylor’s Ed25519 keys; Astra only stores Taylor’s public key.
+- You created a claim (proof.json) that’s signed and includes a lightweight PoW.
+- Astra verified the signature and PoW, recorded the claim, and minted tokens to the wallet.
+
