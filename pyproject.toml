@@ -3,7 +3,7 @@ name = "astra-mana"
 version = "0.1.0"
 description = "Environmental stewardship token demo with PoW and verifiable claims"
 readme = "README.md"
-authors = [{ name = "Your Name" }]
+authors = [{ name = "Jeff Krakenberg" }]
 license = { text = "MIT" }
 requires-python = ">=3.10"
 dependencies = [
@@ -16,3 +16,6 @@ astra-mana = "astra_mana.cli:main"
 [build-system]
 requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
