@@ -79,9 +79,6 @@ class Supporter:
     """Convenience class for scripts (CLI loads keys via keystore)."""
     def __init__(self, name, priv=None):
         self.name = name
-        self.priv, self.pub = (priv or generate_keypair())
-        self.pubkey_hex = pubkey_to_hex(self.pub)
-        self.name = name
         if priv is None:
             self.priv, self.pub = generate_keypair()
         else:
