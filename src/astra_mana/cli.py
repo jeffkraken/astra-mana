@@ -60,14 +60,14 @@ def main():
     args = p.parse_args()
 
     if args.cmd == "init":
-    astra = NonHumanIdentity(
-        args.name,
-        args.classif,
-        args.purpose,
-        tokens_per_hour=args.tph,
-        max_hours_per_claim=args.max_hours,
-        db_path=args.db,
-    )
+        astra = NonHumanIdentity(
+            args.name,
+            args.classif,
+            args.purpose,
+            tokens_per_hour=args.tph,
+            max_hours_per_claim=args.max_hours,
+            db_path=args.db,
+        )
         print(f"Initialized {args.name} → DB: {args.db} | TPH={args.tph} | MAX_HOURS={args.max_hours}")
 
     elif args.cmd == "gen-keys":
