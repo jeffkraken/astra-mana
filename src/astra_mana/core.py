@@ -81,6 +81,13 @@ class Supporter:
         self.name = name
         self.priv, self.pub = (priv or generate_keypair())
         self.pubkey_hex = pubkey_to_hex(self.pub)
+        self.name = name
+        if priv is None:
+            self.priv, self.pub = generate_keypair()
+        else:
+            self.priv = priv
+            self.pub = priv.public_key()
+        self.pubkey_hex = pubkey_to_hex(self.pub)
 
     def create_proof(self, action, hours, evidence_uri="", evidence_hash=""):
         claim_id = str(uuid.uuid4())
